@@ -1,0 +1,240 @@
+body {	
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	font-size: 0.95em;
+	height: 100%;
+}
+
+/* Styles for top-bar */
+
+#address {
+	font-size: 0.9em;
+	letter-spacing: 0.5px;
+	margin-top: 30px;	
+	color: #333;		
+}
+
+#title {
+	margin-top: -10px;
+	color: #be9c58;
+	text-align: center;
+	font-size: 4vw;
+	font-weight: 100;
+	letter-spacing: 5px;
+}
+
+.top-bar-container {
+	margin: 0 auto;
+	width: 900px;
+}
+
+#top-bar {
+	border-bottom: 0.5px solid #ddd;
+	width: 100%;	
+}
+
+/* Styles for navbar */
+nav {
+	text-align: center;
+}
+
+nav ul#navbar {	
+	display: inline-block;
+}
+
+nav #navbar li {
+	padding: 0px 60px;
+	display: inline-block;	
+	list-style-type: none;
+}
+
+nav #navbar li a {
+	text-decoration:none;
+	color: black;	
+}
+
+nav #navbar li a.active {
+	color: #be9c58;
+}
+
+/* styles for hero */
+
+#hero {	
+	height: 40em;
+	width: 100%;
+	background: url("http://cs-server.usc.edu:45678/hw/hw3/images/image6.jpg") no-repeat bottom;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+/* styles for highlights */
+section#HL {
+	margin-top: 50px;	
+}
+
+.HL-container {
+	width: 900px;	
+	margin: 0 auto;
+}
+
+.HL-subcontainer {
+	width: 95%;
+	margin: 0 auto;
+}
+
+#HL-left-bar {
+	float: left;
+	width: 50%;	
+}
+
+.HL-img {	
+	text-align: center;
+	margin-top: 40px;
+}
+
+#h-img1 {
+	margin-top: 95px;
+}
+
+#h-img3 {
+	margin-top: 85px;
+}
+
+#HL-right-bar {
+	float: right;
+	width: 50%;	
+}
+
+.mini-header {
+	margin: 0;
+	letter-spacing: 2px;
+	font-size: 0.7em;
+	font-weight: 100;
+}
+
+.HL-text {
+	max-width: 380px;
+	margin: 0 auto;	
+}
+
+#h-text1 {
+	margin-top: 80px;
+}
+
+h1.HL-header {	
+	margin: 20px 0 0 0;
+	line-height: 40px;
+	font-size: 2.3em;	
+	color: #be9c58;
+	font-style: italic;
+	/*font-family: 'Times New Roman';	/*?????*/
+	/*letter-spacing: 2px;*/
+	width: 80%;
+	font-family: serif;
+	font-weight: 100;
+}
+
+section#testimonial h1.HL-header {
+	width: 100%;
+}
+
+p.HL-desc {
+	letter-spacing: 0.5px;		
+}
+
+a.more-link {
+	color: #000;
+	text-decoration: none;
+	transition: color 0.5s;
+}
+
+.more-link:hover {
+	color: #aaa;	
+}
+
+/*styles for order online*/
+div.clear {
+	clear: both;
+}
+
+section#order {
+	margin-top: 100px;
+	text-align: center;	
+}
+
+#order-img {
+	position: relative;
+	display: inline-block;
+}
+
+#order-text {	
+	color: #333;
+	padding: 20px;
+	background: #fff;	
+	width: 360px;
+	position: absolute;
+	margin: 0 auto;
+	top: 40%;
+	left: 30%;
+}
+
+#order-text p {	
+	margin: 20px 0 0 0;	
+	color: #666;
+}
+
+#order-text a {
+	display: block;
+	font-weight: bold;	
+	text-decoration: none;		
+	font-family: 'Libre Baskerville', serif;
+	margin: 5px 0 20px 0;
+	font-size: 1.5em;
+	color: #666;
+	transition: color 0.5s;
+}
+
+#order-text a:hover {
+	color: #b9b9b9;
+}
+
+/*styles for testimonial*/
+
+section#testimonial {
+	margin-top: 50px;
+	text-align: center;
+}
+
+/*styles for footer*/
+
+section#footer-img {
+	margin-top: 70px;
+	height: 28em;
+	width: 100%;
+	background: url("http://cs-server.usc.edu:45678/hw/hw3/images/image5.jpg") no-repeat center;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+footer {
+	background: #be9c58;
+	height: 12em;
+	width: 100%;
+	margin-bottom: 40px;
+	text-align: left;
+}
+
+footer #copyright-text {
+	position: absolute;
+	left: 70%;
+}
+
+footer p {	
+	font-weight: bold;
+	padding-top: 50px;
+	margin: 0;
+	font-size: 0.8em;
+	color: #fff;
+}

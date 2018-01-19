@@ -3,8 +3,8 @@
 <html>	
 	<head>
 		<title>Thyme</title>
-		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link rel="stylesheet" href="css/style.css">
+		<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Roboto" rel="stylesheet">
+		<link rel="stylesheet" href="style.css">
 	</head>
 
 	<body>
@@ -20,11 +20,11 @@
 		<!-- begin navbar -->
 		<nav>
 			<ul id="navbar">
-				<li><a href="">Home</a></li>        
-				<li><a href="">Our Vision</a></li>  
-				<li><a href="">Menu</a></li>        
-				<li><a href="">Order Online</a></li>
-				<li><a href="">Contact Us</a></li>  
+				<li><a target="_blank" href="page2.html#home" class="active">Home</a></li>
+				<li><a target="_blank" href="page2.html#our-vision">Our Vision</a></li>  
+				<li><a target="_blank" href="page2.html#menu">Menu</a></li>        
+				<li><a target="_blank" href="page2.html#order-online">Order Online</a></li>
+				<li><a target="_blank" href="page2.html#contact-us">Contact Us</a></li>  
 			</ul>
 		</nav>
 		<!-- end navbar -->
@@ -35,16 +35,16 @@
 
 		<!-- begin highlights section -->
 		<section id="HL">
-			<div id="HL-container">				
+			<div class="HL-container">				
 				<div id="HL-left-bar">
-					<div class="HL-subcontainer">
+					
 
 						<div class="HL-img" id="h-img1">
-							<img src="images/image3.jpg">					
+							<img src="http://cs-server.usc.edu:45678/hw/hw3/images/image3.jpg" width="90%">					
 						</div>
 
 						<div class="HL-img" id="h-img2">
-							<img src="images/image2.jpg">					
+							<img src="http://cs-server.usc.edu:45678/hw/hw3/images/image2.jpg" width="90%">					
 						</div>	
 						
 						<div class="HL-text" id="h-text1">
@@ -52,31 +52,59 @@
 							<p class="HL-desc">Supporting local economy and the environment. Gluten-free items also available.</p>
 							<a class="more-link" href="#">Read more here ></a>
 						</div>
-					</div>
+					
 				</div>	
 
-				<div id="HL-right-bar">
-					<div class="HL-subcontainer">
+				<div id="HL-right-bar">					
 						<div class="HL-text">
-							<h6 id="HL-mini-header">OUR RESTAURANT</h6>
+							<h6 class="mini-header">OUR RESTAURANT</h6>
 							<h1 class="HL-header">Local fresh cuisine for everyone</h1>
 							<p class="HL-desc">Pineapples is a family-owned and operated restaurant, dedicated to providing island fresh cuisine to the east side of the Big Island. Our restaurant is located in the historic Pineapple Building, located in the heart of downtown Hilo.</p>
 							<a class="more-link" href="#">Read more here ></a>
 						</div>
 						
 						<div class="HL-img" id="h-img3">
-							<img src="images/image1.jpg">					
+							<img src="http://cs-server.usc.edu:45678/hw/hw3/images/image1.jpg" width="90%">					
 						</div>
 
 						<div class="HL-img" id="h-img4">
-							<img src="images/image4.jpg">					
-						</div>						
-					</div>
-				</div>
-				
-				<div>
-				</div>
+							<img src="http://cs-server.usc.edu:45678/hw/hw3/images/image4.jpg" width="90%">					
+						</div>											
+				</div>	
 			</div>
 		</section>
+		
+		<div class="clear"></div>
+
+		<!-- begin order online section -->
+		<section id="order">
+			<div id="order-img">
+				<div id="order-text">
+					<p class="mini-header">GREEN'S JUST GOT FASTER!</p>
+					<a target="_blank" class="more-link" href="page2.html#order-online">Order Online</a>
+				</div>
+				<img src="http://cs-server.usc.edu:45678/hw/hw3/images/image7.jpg" alt="" width="92%">
+			</div>
+		</section>
+		<!-- end order online section -->
+
+		<!-- begin testimonial section -->
+		<section id="testimonial">
+			<div class="HL-container">
+				<h6 class="mini-header">GoGreenMag.com</h6>
+				<h1 class="HL-header">"Loved it. We walked in around 6:30 without reservations and were seated. <br>The coconut crusted ono was on special and perfect."</h1>
+			</div>
+		</section>
+		<!-- end testimonial section -->
+
+		<section id="footer-img"></section>
+
+		<footer>
+			<div class="HL-container">
+				<div id="copyright-text">
+					<p>&copy;2017 by Pineapples Hilo Restaurant<br>pineappleshilo.com</p>
+				</div>
+			</div>
+		</footer>
 	</body>
 </html>
