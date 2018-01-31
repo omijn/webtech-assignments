@@ -62,11 +62,14 @@ nav #navbar li a.active {
 /* styles for hero */
 
 #hero {	
-	height: 40em;
-	width: 100%;
-	background: url("http://cs-server.usc.edu:45678/hw/hw3/images/image6.jpg") no-repeat bottom;
-	background-size: cover;
-	background-attachment: fixed;
+	width: 1060px;
+	height: 500px;
+	background-image: url("http://cs-server.usc.edu:45678/hw/hw3/images/image6.jpg");
+	background-size: 1530px 900px;
+	background-repeat: no-repeat;
+	background-position: -260px 120px;
+	background-origin: content-box;	
+	background-attachment: fixed;		
 }
 
 /* styles for highlights */

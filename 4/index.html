@@ -1,0 +1,101 @@
+<html>
+	<head>
+		<title></title>
+
+		<style>
+			body {
+				width: 100%;
+			}
+
+			#url-box {
+				margin-top: 100px;				
+				text-align: center;
+			}
+		</style>
+	</head>
+	
+	<body>
+		
+		<div id="url-box">
+			<h3>Enter URL for Trucking List JSON File</h3>
+			<input autofocus id="filename" type="text"><br><br>
+			<button onclick="getJSON()">Submit Query</button>
+		</div>
+
+		<script>
+			function getJSON() {
+				var filename = document.getElementById("filename").value;
+				if (filename == "") {
+					alert("Please enter a filename.");
+					return;
+				}
+
+				var xhr = new XMLHttpRequest();				
+				xhr.open("GET", filename, false);					
+				xhr.send();
+				if(xhr.status == 404)
+			        alert("That file was not found. Please try a different filename.");				
+
+				jsonDoc = xhr.responseText;				
+
+				data = JSON.parse(jsonDoc)
+				if (fileHasData(data))
+					generateHtml(data);
+				else
+					alert("That file does not contain trucking company entries.");
+				return;
+			}
+
+			function fileHasData(data) {
+				return data.Mainline.Table.hasOwnProperty('Row');				
+			}
+
+			function generateHtml(data) {
+
+				var html = "<html><head>";
+				html += "<style>" +							
+							"table, th, td { border: 1px solid black; }" +
+							".bold {font-weight:bold}" +							
+						"</style>";
+				
+				html += "</head><body><table><thead><tr>";
+
+				// iterate through table headers
+				for (let th of data.Mainline.Table.Header.Data) {
+					html += "<th>" + th + "</th>";
+				}
+				html += "</tr></thead><tbody>";
+
+				// iterate through content rows
+				for (let row of data.Mainline.Table.Row) {
+					html += "<tr>";
+					html += "<td>" + row.Company + "</td>";
+					html += "<td>" + row.Services + "</td>";
+					html += "<td><ul>";
+
+					for (let i = 0; i < row.Hubs.Hub.length; i++) {						
+						if (i == 0) {
+							html += "<li class='bold'>" + row.Hubs.Hub[i] + "</li>";
+						}
+						else
+							html += "<li>" + row.Hubs.Hub[i] + "</li>";
+					}
+
+					html += "</ul></td>";
+
+					html += "<td>" + row.Revenue + "</td>";
+					html += "<td><a href='" + row.HomePage + "'>" + row.HomePage + "</a></td>";
+					html += "<td><img width=400 src='" + row.Logo + "' alt='logo'/></td>";
+					html += "</tr>";
+				}				
+				html += "<tbody></table></body></html>";
+
+				var truckdoc = window.open();
+				truckdoc.document.open();
+				truckdoc.document.write(html);
+				// truckdoc.document.close();
+			}
+
+		</script>
+	</body>
+</html>
