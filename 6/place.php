@@ -60,9 +60,9 @@
 				
 				<label for="location">from</label>
 				<div id="location-radio">					
-					<input type="radio" name="location" class="input-location" value="here" checked /> Here <br>
-					<input type="radio" name="location" class="input-location" value="there" placeholder="Location" /> 
-					<input type="text" name="location">					
+					<input type="radio" name="location" value="here" checked onclick="javascript:dontRequireLocation()" /> Here <br>
+					<input type="radio" name="location" onclick="javascript:requireLocation()" /> 
+					<input type="text" name="location" id="input-location" placeholder="Location">					
 				</div>
 				<br>
 				<br>
@@ -95,7 +95,17 @@
 				// global
 				user_latitude = data.lat;
 				user_longitude = data.lon;
-				console.log(user_latitude + "\n" + user_longitude);
+				console.log("Fetched user location: (" + user_latitude + ", " + user_longitude + ")");
+			}
+
+			function requireLocation(radio) {		
+				document.getElementById("input-location").setAttribute("required", "");
+				console.log(document.getElementById("input-location").getAttribute("required"));
+			}
+			
+			function dontRequireLocation() {
+				document.getElementById("input-location").removeAttribute("required");
+				console.log(document.getElementById("input-location").getAttribute("required"));
 			}
 
 		</script>
