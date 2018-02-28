@@ -1,9 +1,44 @@
 <?php 
+	
+	function get_coords_by_address($address) {
+		// call geocoding API to convert address to coordinates
+		$api_key = "AIzaSyAuthszQ_BKIMTuH8OlE3OgGF_uW6hbaIs";
+		$api_baseurl = "https://maps.googleapis.com/maps/api/geocode/json?";
+		$address = urlencode($address);		
+		$request_url = $api_baseurl."address=$address&key=$api_key";
 
-	if (!empty($_POST["keyword"])) {
+		$response = json_decode(file_get_contents($request_url), true);
 
-		// use exit instead of echo to prevent entire HTML page from getting returned
-		exit(json_encode($_POST));
+		$latitude = $response["results"][0]["geometry"]["location"]["lat"];
+		$longitude = $response["results"][0]["geometry"]["location"]["lng"];
+		$coords = "$latitude,$longitude";
+
+		return $coords;
+	}
+
+	// check whether data has been POSTed
+	if (!empty($_POST["search"])) {
+
+		// if the user clicks on search button		
+		if ($_POST["search"] == "nearby") {
+
+			// get coordinates
+			if ($_POST["location_type"] == "address")
+				$coords = urlencode(get_coords_by_address($_POST["loc"]));	
+			else
+				$coords = urlencode($_POST["loc"]);
+
+			exit(json_encode(array('coords' => $coords)));
+				
+
+			// use exit instead of echo to prevent entire HTML page from getting returned
+			exit(json_encode($_POST));
+		}
+
+		// if the user clicks on place returned by nearby search
+		else if($_POST["search"] == "details") {
+
+		}
 	}
 
 ?>
@@ -128,10 +163,12 @@
 				radio = document.getElementsByClassName("radio-loc");								
 				if (radio[0].checked) {
 					location_type = "coords";
+
+					// can't use location as a variable name because it refers to window.location
 					loc = user_location;
 				}
 				else {
-					location_type = "name";
+					location_type = "address";					
 					loc = document.getElementById("input-location").value;
 				}
 
@@ -149,11 +186,12 @@
 						// displayData(response);
 					}
 				}
-				xhr.send("keyword=" + keyword +
+				xhr.send("search=nearby" +
+						"&keyword=" + keyword +
 						"&category=" + category + 
 						"&distance=" + distance + 
 						"&location_type=" + location_type + 
-						"&loc=" + loc);
+						"&loc=" + loc);		
 			}
 
 		</script>
