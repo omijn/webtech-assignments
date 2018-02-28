@@ -1,11 +1,14 @@
 <?php 
 	
+
+	// call Google Geocoding API - convert address to coordinates
 	function get_coords_by_address($address) {
-		// call geocoding API to convert address to coordinates
+		
 		$api_key = "AIzaSyAuthszQ_BKIMTuH8OlE3OgGF_uW6hbaIs";
-		$api_baseurl = "https://maps.googleapis.com/maps/api/geocode/json?";
 		$address = urlencode($address);		
-		$request_url = $api_baseurl."address=$address&key=$api_key";
+
+		$api_baseurl = "https://maps.googleapis.com/maps/api/geocode/json?";
+		$request_url = $api_baseurl."address=$address"."&key=$api_key";
 
 		$response = json_decode(file_get_contents($request_url), true);
 
@@ -16,23 +19,42 @@
 		return $coords;
 	}
 
+	// call Google Nearby Place Search API
+	function nearby_search($keyword, $type, $radius, $location) {
+
+		$api_key = "AIzaSyCKdJ9bVn6LMk0O8CU-Dzc9HmIj5fi5AuU";
+
+		// urlencode params
+		$keyword = urlencode($keyword);
+		$type = urlencode($type);
+		$radius = urlencode($radius * 1609.34);
+		$location = urlencode($location);
+
+
+		$api_baseurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+		$request_url = $api_baseurl."keyword=$keyword"."&type=$type"."&radius=$radius"."&location=$location"."&key=$api_key";		
+		$response = file_get_contents($request_url);
+
+		return $response;
+	}
+
 	// check whether data has been POSTed
 	if (!empty($_POST["search"])) {
 
 		// if the user clicks on search button		
 		if ($_POST["search"] == "nearby") {
 
-			// get coordinates
+			// get coordinates or convert to coordinates
 			if ($_POST["location_type"] == "address")
-				$coords = urlencode(get_coords_by_address($_POST["loc"]));	
+				$coords = get_coords_by_address($_POST["loc"]);	
 			else
-				$coords = urlencode($_POST["loc"]);
+				$coords = $_POST["loc"];									
 
-			exit(json_encode(array('coords' => $coords)));
-				
+			// call the Nearby Place Search API
+			$response = nearby_search($_POST["keyword"], $_POST["category"], $_POST["distance"], $coords);
 
 			// use exit instead of echo to prevent entire HTML page from getting returned
-			exit(json_encode($_POST));
+			exit($response);
 		}
 
 		// if the user clicks on place returned by nearby search
@@ -181,7 +203,7 @@
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function() {					
 					if (xhr.readyState == 4 && xhr.status == 200) {
-						alert(xhr.responseText);
+						console.log(xhr.responseText);
 						// response = JSON.parse(xhr.responseText);
 						// displayData(response);
 					}
