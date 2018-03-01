@@ -33,9 +33,19 @@
 
 		$api_baseurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 		$request_url = $api_baseurl."keyword=$keyword"."&type=$type"."&radius=$radius"."&location=$location"."&key=$api_key";		
-		$response = file_get_contents($request_url);
+		$response = json_decode(file_get_contents($request_url), true);
 
-		return $response;
+		// remove useless data from response
+		$clean_response = array();
+		foreach ($response["results"] as $index => $result) {
+			$clean_response[$index] = array();
+			$clean_response[$index]["category"] = $result["icon"];
+			$clean_response[$index]["name"] = $result["name"];
+			$clean_response[$index]["address"] = $result["vicinity"];
+			$clean_response[$index]["id"] = $result["id"];
+		}		
+
+		return json_encode($clean_response);		
 	}
 
 	// check whether data has been POSTed
@@ -93,6 +103,15 @@
 				display: inline-block;				
 			}
 
+			table {
+				margin: 0 auto;
+			}
+
+			table, th, td {
+			    border: 1px solid black;
+			    border-collapse: collapse;
+			}
+
 		</style>
 	</head>
 
@@ -143,7 +162,7 @@
 		<script>
 			/* when the page has loaded, get user location and enable the search button */
 			function getLocation() {
-				var xhr = new XMLHttpRequest(); 
+				var xhr = new XMLHttpRequest(); 				
 				xhr.open("GET", "http://ip-api.com/json/", false);
 				xhr.send();
 				try	{
@@ -203,17 +222,40 @@
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function() {					
 					if (xhr.readyState == 4 && xhr.status == 200) {
-						console.log(xhr.responseText);
-						// response = JSON.parse(xhr.responseText);
-						// displayData(response);
+						// console.log(xhr.responseText);
+						nearby_data = JSON.parse(xhr.responseText);
+						displayNearbyData(nearby_data);
 					}
 				}
+
 				xhr.send("search=nearby" +
 						"&keyword=" + keyword +
 						"&category=" + category + 
 						"&distance=" + distance + 
 						"&location_type=" + location_type + 
 						"&loc=" + loc);		
+			}
+
+			function displayNearbyData(data) {
+
+				var template = document.createElement("template");	// cool HTML5 stuff
+
+				var table = "<table><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
+				for (let entry of data) {
+					table += "<tr>";
+					table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
+					table += "<td><a onclick='javascript:getDetails(" + entry.id + ")'>" + entry.name + "</a></td>";
+					table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
+					table += "</tr>";
+				}
+
+				table += "</table>";
+
+				table = table.trim();
+				template.innerHTML = table;
+
+				document.body.appendChild(template.content.firstChild);
+				// console.log(data);
 			}
 
 		</script>
