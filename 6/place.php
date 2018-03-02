@@ -148,18 +148,21 @@
 				<div id="location-radio">					
 					<input type="radio" name="location" class="radio-loc" value="here" checked onclick="javascript:dontRequireLocation()"> Here <br>
 					<input type="radio" name="location" class="radio-loc" value="there" onclick="javascript:requireLocation()"> 
-					<input type="text" name="location" id="input-location" placeholder="Location">					
+					<input type="text" name="location" id="input-location" placeholder="Location" disabled>					
 				</div>
 				<br>
 				<br>
 				<br>				
 
 				<input type="submit" value="Search" id="search-button" disabled> 
-				<input type="reset" value="Clear">
+				<input type="button" value="Clear" onclick="clr(); setDefaults();">
 			</form>
 		</div>
+		
+		<div id="result-area"></div>
 
-		<script>
+		<script>			
+
 			/* when the page has loaded, get user location and enable the search button */
 			function getLocation() {
 				var xhr = new XMLHttpRequest(); 				
@@ -187,11 +190,13 @@
 			}
 
 			function requireLocation() {		
-				document.getElementById("input-location").setAttribute("required", "");				
+				document.getElementById("input-location").setAttribute("required", "");
+				document.getElementById("input-location").removeAttribute("disabled");
 			}
 			
 			function dontRequireLocation() {
 				document.getElementById("input-location").removeAttribute("required");				
+				document.getElementById("input-location").setAttribute("disabled", "");
 			}
 
 			function validateInput() {
@@ -236,11 +241,13 @@
 						"&loc=" + loc);		
 			}
 
-			function displayNearbyData(data) {
+			function displayNearbyData(data) {							
+				// clear result area before displaying new data
+				clr();
 
 				var template = document.createElement("template");	// cool HTML5 stuff
 
-				var table = "<table><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
+				var table = "<table id='nearby-results-table'><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
 				for (let entry of data) {
 					table += "<tr>";
 					table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
@@ -254,8 +261,29 @@
 				table = table.trim();
 				template.innerHTML = table;
 
-				document.body.appendChild(template.content.firstChild);
+				document.getElementById("result-area").appendChild(template.content.firstChild);
 				// console.log(data);
+			}
+
+			/* clear result area 
+			 * NOTE - clear can't be used as a function name */
+			function clr() {				
+				var result_div = document.getElementById("result-area");
+				while(result_div.hasChildNodes()) {
+					result_div.removeChild(result_div.lastChild);
+				}
+			}
+
+			function setDefaults() {
+				document.getElementById("input-keyword").value = "";
+				document.getElementById("input-keyword").focus();
+				
+				document.getElementById("input-category").value = "default";
+				document.getElementById("input-distance").value = "";
+				document.getElementsByClassName("radio-loc")[0].checked = true;
+
+				document.getElementById("input-location").value = "";
+				document.getElementById("input-location").setAttribute("disabled", "");
 			}
 
 		</script>
