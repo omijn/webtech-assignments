@@ -42,10 +42,54 @@
 			$clean_response[$index]["category"] = $result["icon"];
 			$clean_response[$index]["name"] = $result["name"];
 			$clean_response[$index]["address"] = $result["vicinity"];
-			$clean_response[$index]["id"] = $result["id"];
+			$clean_response[$index]["place_id"] = $result["place_id"];
 		}		
 
 		return json_encode($clean_response);		
+	}
+
+	function detail_search($place_id) {
+		$api_key = "AIzaSyCKdJ9bVn6LMk0O8CU-Dzc9HmIj5fi5AuU";
+
+		$api_baseurl = "https://maps.googleapis.com/maps/api/place/details/json?";
+		$request_url = $api_baseurl."placeid=$place_id"."&key=$api_key";
+		$response = json_decode(file_get_contents($request_url), true);
+		
+		// exit(json_encode($response));
+
+		$clean_response = array("photos" => array(), "reviews" => array());		
+		foreach ($response["result"]["photos"] as $key => $photo_obj) {
+			if ($key > 4)	// save only upto 5 photos
+				break;
+			$ref = $photo_obj["photo_reference"];
+			$width = $photo_obj["width"];
+			$photo = photo_search($ref, $width);
+			$filename = "$place_id"."_"."img".$key;
+			file_put_contents($filename, $photo);
+
+			$clean_response["photos"][$key] = $filename;
+		}
+
+		foreach ($response["result"]["reviews"] as $key => $review_obj) {
+			if ($key > 4)	// save only upto 5 reviews
+				break;
+			$author_name = $review_obj["author_name"];
+			$author_photo = $review_obj["profile_photo_url"];
+			$review = $review_obj["text"];
+
+			$clean_response["reviews"][$key] = array("author_name" => $author_name, "author_photo" => $author_photo, "review" => $review);
+		}
+
+		return json_encode($clean_response);
+	}
+
+	function photo_search($ref, $width) {
+		$api_key = "AIzaSyAuthszQ_BKIMTuH8OlE3OgGF_uW6hbaIs";
+
+		$api_baseurl = "https://maps.googleapis.com/maps/api/place/photo?";
+		$request_url = $api_baseurl."maxwidth=$width"."&photoreference=$ref"."&key=$api_key";
+		$photo = file_get_contents($request_url);
+		return $photo;
 	}
 
 	// check whether data has been POSTed
@@ -68,8 +112,9 @@
 		}
 
 		// if the user clicks on place returned by nearby search
-		else if($_POST["search"] == "details") {
-
+		else if($_POST["search"] == "detail") {
+			$response = detail_search($_POST['place_id']);
+			exit($response);
 		}
 	}
 
@@ -118,6 +163,16 @@
 
 			td img {
 				width: 30px;				
+			}
+	
+			td a {
+				text-decoration: none;
+				color: #000;
+			}
+
+			td a:hover {
+				color: #666;
+				cursor: pointer;
 			}
 
 			div#error {
@@ -244,8 +299,7 @@
 				xhr.open("POST", "place.php", true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function() {					
-					if (xhr.readyState == 4 && xhr.status == 200) {
-						// console.log(xhr.responseText);
+					if (xhr.readyState == 4 && xhr.status == 200) {						
 						nearby_data = JSON.parse(xhr.responseText);						
 						displayNearbyData(nearby_data);
 					}
@@ -271,7 +325,7 @@
 					for (let entry of data) {
 						table += "<tr>";
 						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
-						table += "<td><a onclick='javascript:getDetails(" + entry.id + ")'>" + entry.name + "</a></td>";
+						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "')\">" + entry.name + "</a></td>";
 						table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
 						table += "</tr>";
 					}
@@ -311,6 +365,22 @@
 
 				document.getElementById("input-location").value = "";
 				document.getElementById("input-location").setAttribute("disabled", "");
+			}
+
+			function getDetails(place_id) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", "place.php", true);
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						console.log(xhr.responseText);
+						detailed_data = JSON.parse(xhr.responseText);
+						// displayDetailedData(detailed_data);
+					}
+				}
+
+				xhr.send("search=detail" + 
+						"&place_id=" + place_id);
 			}
 
 		</script>
