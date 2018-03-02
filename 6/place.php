@@ -185,6 +185,16 @@
 				margin-top: 20px;
 			}
 
+			#review-wrapper	{
+				margin: 0 auto;
+				text-align: center;
+				cursor: pointer;
+			}
+
+			#review-wrapper img {
+				width: 50px;
+			}
+
 			table#review-table, table#photo-table {
 				width: 50%;				
 			}
@@ -198,7 +208,7 @@
 			}
 
 			table#photo-table td {
-				padding: 10px;
+				padding: 20px;
 			}
 		
 			table#photo-table img.big-img {
@@ -408,8 +418,13 @@
 
 				var template = document.createElement("template");
 
-				// reviews
-				var table1 = "<table id='review-table'><tbody>";
+				// reviews				
+				var wrapper1 = "<div id='review-wrapper' onclick='toggleReviews()'>";
+				wrapper1 += "<span>click to show reviews</span><br>";
+				wrapper1 += "<img src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
+				wrapper1 += "</div>";
+
+				var table1 = "<table style='display:none' id='review-table'><tbody>";
 				for (let review of data.reviews) {
 					table1 += "<tr class='center-row'><td>";
 					table1 += "<img src='" + review.author_photo + "'>";
@@ -423,9 +438,10 @@
 
 				table1 += "</tbody></table>";
 
-				template.innerHTML = table1;
-				document.getElementById("result-area").appendChild(template.content.firstChild);
+				template.innerHTML = wrapper1 + table1;
+				document.getElementById("result-area").appendChild(template.content);
 
+				// photos
 				var table2 = "<table id='photo-table'><tbody>";
 				for (let photo of data.photos) {
 					table2 += "<tr class='center-row'><td>";
