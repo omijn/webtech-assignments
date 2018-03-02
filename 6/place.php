@@ -185,16 +185,24 @@
 				margin-top: 20px;
 			}
 
-			table#review-table {
-				width: 70%;				
+			table#review-table, table#photo-table {
+				width: 50%;				
 			}
 
-			table#review-table tr.center-row {
+			table tr.center-row {
 				text-align: center;
 			}
 			
 			span.author-name {
 				font-weight: bold;
+			}
+
+			table#photo-table td {
+				padding: 10px;
+			}
+		
+			table#photo-table img.big-img {
+				width: 100%;
 			}
 
 		</style>
@@ -416,6 +424,17 @@
 				table1 += "</tbody></table>";
 
 				template.innerHTML = table1;
+				document.getElementById("result-area").appendChild(template.content.firstChild);
+
+				var table2 = "<table id='photo-table'><tbody>";
+				for (let photo of data.photos) {
+					table2 += "<tr class='center-row'><td>";
+					table2 += "<a target='_blank' href='" + photo + "'><img class='big-img' src='" + photo + "'></a>";
+					table2 += "</td></tr>";
+				}
+				
+				table2 += "</tbody></table>";
+				template.innerHTML = table2;
 				document.getElementById("result-area").appendChild(template.content.firstChild);
 			}
 
