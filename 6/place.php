@@ -149,7 +149,7 @@
 			}
 
 			table {
-				margin: 20px auto 0;
+				margin: 20px auto 0;				
 			}
 
 			table, th, td {			    
@@ -183,6 +183,18 @@
 				text-align: center;
 				width: 70%;
 				margin-top: 20px;
+			}
+
+			table#review-table {
+				width: 70%;				
+			}
+
+			table#review-table tr.center-row {
+				text-align: center;
+			}
+			
+			span.author-name {
+				font-weight: bold;
 			}
 
 		</style>
@@ -325,12 +337,12 @@
 					for (let entry of data) {
 						table += "<tr>";
 						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
-						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "')\">" + entry.name + "</a></td>";
+						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "', '" + entry.name + "')\">" + entry.name + "</a></td>";
 						table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
 						table += "</tr>";
 					}
 
-					table += "</table>";
+					table += "</tbody></table>";
 
 					table = table.trim();					
 					template.innerHTML = table;
@@ -367,7 +379,7 @@
 				document.getElementById("input-location").setAttribute("disabled", "");
 			}
 
-			function getDetails(place_id) {
+			function getDetails(place_id, place_name) {
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", "place.php", true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -375,12 +387,36 @@
 					if (xhr.readyState == 4 && xhr.status == 200) {
 						console.log(xhr.responseText);
 						detailed_data = JSON.parse(xhr.responseText);
-						// displayDetailedData(detailed_data);
+						displayDetailedData(detailed_data, place_name);
 					}
 				}
 
 				xhr.send("search=detail" + 
 						"&place_id=" + place_id);
+			}
+
+			function displayDetailedData(data, name) {
+				clr();
+
+				var template = document.createElement("template");
+
+				// reviews
+				var table1 = "<table id='review-table'><tbody>";
+				for (let review of data.reviews) {
+					table1 += "<tr class='center-row'><td>";
+					table1 += "<img src='" + review.author_photo + "'>";
+					table1 += "<span class='author-name'>" + review.author_name + "</span>";
+					table1 += "</td></tr>";
+
+					table1 += "<tr><td>";
+					table1 += review.review;
+					table1 += "</td></tr>";
+				}
+
+				table1 += "</tbody></table>";
+
+				template.innerHTML = table1;
+				document.getElementById("result-area").appendChild(template.content.firstChild);
 			}
 
 		</script>
