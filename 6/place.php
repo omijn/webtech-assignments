@@ -104,12 +104,30 @@
 			}
 
 			table {
-				margin: 0 auto;
+				margin: 20px auto 0;
 			}
 
-			table, th, td {
-			    border: 1px solid black;
+			table, th, td {			    
+			    border: 2px solid #ccc;
 			    border-collapse: collapse;
+			}
+
+			th, td {
+				padding: 5px;
+			}
+
+			td img {
+				width: 30px;				
+			}
+
+			div#error {
+				margin: 0 auto;
+				border: 2px solid #ccc;
+				padding: 5px;
+				background-color: #f7f7f7;
+				text-align: center;
+				width: 70%;
+				margin-top: 20px;
 			}
 
 		</style>
@@ -228,7 +246,7 @@
 				xhr.onreadystatechange = function() {					
 					if (xhr.readyState == 4 && xhr.status == 200) {
 						// console.log(xhr.responseText);
-						nearby_data = JSON.parse(xhr.responseText);
+						nearby_data = JSON.parse(xhr.responseText);						
 						displayNearbyData(nearby_data);
 					}
 				}
@@ -247,19 +265,28 @@
 
 				var template = document.createElement("template");	// cool HTML5 stuff
 
-				var table = "<table id='nearby-results-table'><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
-				for (let entry of data) {
-					table += "<tr>";
-					table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
-					table += "<td><a onclick='javascript:getDetails(" + entry.id + ")'>" + entry.name + "</a></td>";
-					table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
-					table += "</tr>";
+				// if nearby search returns results
+				if (data.length	!= 0) {
+					var table = "<table id='nearby-results-table'><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
+					for (let entry of data) {
+						table += "<tr>";
+						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
+						table += "<td><a onclick='javascript:getDetails(" + entry.id + ")'>" + entry.name + "</a></td>";
+						table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
+						table += "</tr>";
+					}
+
+					table += "</table>";
+
+					table = table.trim();					
+					template.innerHTML = table;
 				}
 
-				table += "</table>";
-
-				table = table.trim();
-				template.innerHTML = table;
+				// if nearby search returns no results
+				else {
+					error = "<div id='error'>No records have been found.</div>";
+					template.innerHTML = error;					
+				}
 
 				document.getElementById("result-area").appendChild(template.content.firstChild);
 				// console.log(data);
@@ -277,7 +304,7 @@
 			function setDefaults() {
 				document.getElementById("input-keyword").value = "";
 				document.getElementById("input-keyword").focus();
-				
+
 				document.getElementById("input-category").value = "default";
 				document.getElementById("input-distance").value = "";
 				document.getElementsByClassName("radio-loc")[0].checked = true;
