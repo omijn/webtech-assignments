@@ -158,7 +158,7 @@
 			}
 
 			th, td {
-				padding: 5px;
+				padding: 5px;				
 			}
 
 			td img {
@@ -175,7 +175,7 @@
 				cursor: pointer;
 			}
 
-			div#error {
+			div.error {
 				margin: 0 auto;
 				border: 2px solid #ccc;
 				padding: 5px;
@@ -195,24 +195,21 @@
 				margin: 20px auto;
 				text-align: center;
 				cursor: pointer;
+				width: 40%;
 			}
 
 			#review-wrapper img, #photo-wrapper img {
 				width: 50px;
 			}
 
-			table#review-table, table#photo-table {
-				width: 50%;				
+			table#review-table, table#photo-table  {
+				width: 50%;
 			}
 
 			table tr.center-row {
 				text-align: center;
 			}
 			
-			span.author-name {
-				font-weight: bold;
-			}
-
 			table#photo-table td {
 				padding: 20px;
 			}
@@ -220,6 +217,11 @@
 			table#photo-table img.big-img {
 				width: 100%;
 			}
+
+			span.author-name {
+				font-weight: bold;
+			}
+
 
 		</style>
 	</head>
@@ -374,7 +376,7 @@
 
 				// if nearby search returns no results
 				else {
-					error = "<div id='error'>No records have been found.</div>";
+					error = "<div class='error'>No records have been found.</div>";
 					template.innerHTML = error;					
 				}
 
@@ -432,19 +434,25 @@
 				wrapper1 += "<img id='review-toggle-img' src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
 				wrapper1 += "</div>";
 
-				var table1 = "<table style='display:none' id='review-table'><tbody>";
-				for (let review of data.reviews) {
-					table1 += "<tr class='center-row'><td>";
-					table1 += "<img src='" + review.author_photo + "'>";
-					table1 += "<span class='author-name'>" + review.author_name + "</span>";
-					table1 += "</td></tr>";
+				var table1 = "";
+				if (data.reviews.length == 0) {
+					table1 += "<div style='display:none' id='review-table' class='error'>No reviews found.</div>";
+				}
+				else {
+					table1 = "<table style='display:none' id='review-table'><tbody>";
+					for (let review of data.reviews) {
+						table1 += "<tr class='center-row'><td>";
+						table1 += "<img src='" + review.author_photo + "'>";
+						table1 += "<span class='author-name'>" + review.author_name + "</span>";
+						table1 += "</td></tr>";
 
-					table1 += "<tr><td>";
-					table1 += review.review;
-					table1 += "</td></tr>";
+						table1 += "<tr><td>";
+						table1 += review.review;
+						table1 += "</td></tr>";
+					}					
+					table1 += "</tbody></table>";							
 				}
 
-				table1 += "</tbody></table>";							
 
 				// photos
 				var wrapper2 = "<div id='photo-wrapper' onclick='togglePhotos()'>";
@@ -452,20 +460,26 @@
 				wrapper2 += "<img id='photo-toggle-img' src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
 				wrapper2 += "</div>";
 
-				var table2 = "<table style='display:none' id='photo-table'><tbody>";
-				for (let photo of data.photos) {
-					table2 += "<tr class='center-row'><td>";
-					table2 += "<a target='_blank' href='" + photo + "'><img class='big-img' src='" + photo + "'></a>";
-					table2 += "</td></tr>";
+				var table2 = "";
+				if (data.photos.length == 0) {
+					table2 += "<div style='display:none' id='photo-table' class='error'>No photos found.</div>";
+				}
+				else {
+					table2 += "<table style='display:none' id='photo-table'><tbody>";
+					for (let photo of data.photos) {
+						table2 += "<tr class='center-row'><td>";
+						table2 += "<a target='_blank' href='" + photo + "'><img class='big-img' src='" + photo + "'></a>";
+						table2 += "</td></tr>";
+					}					
+					table2 += "</tbody></table>";
 				}
 				
-				table2 += "</tbody></table>";
 				template.innerHTML = name + wrapper1 + table1 + wrapper2 + table2;
 				document.getElementById("result-area").appendChild(template.content);
 			}
 
 			function showReviews() {
-				document.getElementById("review-table").style.display = "block";
+				document.getElementById("review-table").style.display = "table";
 				document.getElementById("review-toggle-text").innerHTML = "click to hide reviews";
 				document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
 			}
@@ -488,7 +502,7 @@
 			}
 
 			function showPhotos() {
-				document.getElementById("photo-table").style.display = "block";
+				document.getElementById("photo-table").style.display = "table";
 				document.getElementById("photo-toggle-text").innerHTML = "click to hide photos";
 				document.getElementById("photo-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
 			}
