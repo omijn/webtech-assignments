@@ -107,7 +107,7 @@
 			// call the Nearby Place Search API
 			$response = nearby_search($_POST["keyword"], $_POST["category"], $_POST["distance"], $coords);
 
-			// use exit instead of echo to prevent entire HTML page from getting returned
+			// use exit to prevent returning HTML
 			exit($response);
 		}
 
@@ -184,14 +184,20 @@
 				width: 70%;
 				margin-top: 20px;
 			}
+			
+			#place-name {
+				font-weight: bold;
+				text-align: center;
+				margin: 20px auto 0;
+			}
 
-			#review-wrapper	{
-				margin: 0 auto;
+			#review-wrapper, #photo-wrapper	{
+				margin: 20px auto;
 				text-align: center;
 				cursor: pointer;
 			}
 
-			#review-wrapper img {
+			#review-wrapper img, #photo-wrapper img {
 				width: 50px;
 			}
 
@@ -355,7 +361,7 @@
 					for (let entry of data) {
 						table += "<tr>";
 						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
-						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "', '" + entry.name + "')\">" + entry.name + "</a></td>";
+						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "', '" + escape(entry.name) + "')\">" + entry.name + "</a></td>";
 						table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
 						table += "</tr>";
 					}
@@ -418,6 +424,8 @@
 
 				var template = document.createElement("template");
 
+				var name = "<p id='place-name'>" + unescape(name) + "</p>";
+
 				// reviews				
 				var wrapper1 = "<div id='review-wrapper' onclick='toggleReviews()'>";
 				wrapper1 += "<span id='review-toggle-text'>click to show reviews</span><br>";
@@ -436,13 +444,15 @@
 					table1 += "</td></tr>";
 				}
 
-				table1 += "</tbody></table>";
-
-				template.innerHTML = wrapper1 + table1;
-				document.getElementById("result-area").appendChild(template.content);
+				table1 += "</tbody></table>";							
 
 				// photos
-				var table2 = "<table id='photo-table'><tbody>";
+				var wrapper2 = "<div id='photo-wrapper' onclick='togglePhotos()'>";
+				wrapper2 += "<span id='photo-toggle-text'>click to show photos</span><br>";
+				wrapper2 += "<img id='photo-toggle-img' src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
+				wrapper2 += "</div>";
+
+				var table2 = "<table style='display:none' id='photo-table'><tbody>";
 				for (let photo of data.photos) {
 					table2 += "<tr class='center-row'><td>";
 					table2 += "<a target='_blank' href='" + photo + "'><img class='big-img' src='" + photo + "'></a>";
@@ -450,32 +460,55 @@
 				}
 				
 				table2 += "</tbody></table>";
-				template.innerHTML = table2;
-				document.getElementById("result-area").appendChild(template.content.firstChild);
+				template.innerHTML = name + wrapper1 + table1 + wrapper2 + table2;
+				document.getElementById("result-area").appendChild(template.content);
+			}
+
+			function showReviews() {
+				document.getElementById("review-table").style.display = "block";
+				document.getElementById("review-toggle-text").innerHTML = "click to hide reviews";
+				document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
+			}
+
+			function hideReviews() {
+				document.getElementById("review-table").style.display = "none";
+				document.getElementById("review-toggle-text").innerHTML = "click to show reviews";
+				document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png";
 			}
 
 			function toggleReviews() {
-				var review_table = document.getElementById("review-table");
 
-				// show reviews
-				if (review_table.style.display == "none") {
-					review_table.style.display = "block";
-					document.getElementById("review-toggle-text").innerHTML = "click to hide reviews";
-					document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
-				}
-
-				// hide reviews
+				if (document.getElementById("review-table").style.display == "none") {
+					showReviews();
+					hidePhotos();
+				}			
 				else {
-					review_table.style.display = "none";
-					document.getElementById("review-toggle-text").innerHTML = "click to show reviews";
-					document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png";
+					hideReviews();					
 				}
 			}
 
-			function togglePhotos() {
-
+			function showPhotos() {
+				document.getElementById("photo-table").style.display = "block";
+				document.getElementById("photo-toggle-text").innerHTML = "click to hide photos";
+				document.getElementById("photo-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
 			}
-			
+
+			function hidePhotos() {
+					document.getElementById("photo-table").style.display = "none";
+					document.getElementById("photo-toggle-text").innerHTML = "click to show photos";
+					document.getElementById("photo-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png";
+			}
+
+			function togglePhotos() {								
+				if (document.getElementById("photo-table").style.display == "none") {
+					showPhotos();
+					hideReviews();
+				}
+				else {
+					hidePhotos();
+				}
+			}
+
 		</script>
 	</body>
 </html>
