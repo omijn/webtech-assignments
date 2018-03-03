@@ -37,14 +37,15 @@
 		// remove useless data from response
 		$clean_response = array();
 		foreach ($response["results"] as $index => $result) {
-			$clean_response[$index] = array();
-			$clean_response[$index]["category"] = $result["icon"];
-			$clean_response[$index]["name"] = $result["name"];
-			$clean_response[$index]["address"] = $result["vicinity"];
-			$clean_response[$index]["place_id"] = $result["place_id"];
-			$clean_response[$index]["coords"] = urldecode($location);
-		}		
+			$clean_response["results"][$index] = array();
+			$clean_response["results"][$index]["category"] = $result["icon"];
+			$clean_response["results"][$index]["name"] = $result["name"];
+			$clean_response["results"][$index]["address"] = $result["vicinity"];
+			$clean_response["results"][$index]["place_id"] = $result["place_id"];
+			$clean_response["results"][$index]["coords"] = $result["geometry"]["location"]["lat"].",".$result["geometry"]["location"]["lng"];	// used to center map
+		}				
 
+		$clean_response["from_coords"] = urldecode($location);	// save this now so that the coordinates don't have to be fetched again while rendering the map
 		return json_encode($clean_response);		
 	}
 
@@ -227,6 +228,21 @@
 				width: 400px;
 				height: 400px;
 			}
+
+			.dir-options {
+				position: absolute;				
+			}
+
+			.dir-options div {
+				padding: 10px;
+				background: #f7f7f7;
+				cursor: pointer;
+			}
+
+			.dir-options div:hover {
+				background: #e5e5e5;				
+			}
+
 		</style>
 	</head>
 
@@ -362,13 +378,13 @@
 				var template = document.createElement("template");	// cool HTML5 stuff
 
 				// if nearby search returns results
-				if (data.length	!= 0) {
+				if (data.results.length	!= 0) {
 					var table = "<table id='nearby-results-table'><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
-					for (let entry of data) {
+					for (let entry of data.results) {
 						table += "<tr>";
 						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
 						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "', '" + escape(entry.name) + "')\">" + entry.name + "</a></td>";
-						table += "<td id='address-" + entry.place_id + "'><a onclick=\"javascript:getMap('" + entry.place_id + "', '" + entry.coords + "')\">" + entry.address + "</a></td>";
+						table += "<td id='address-" + entry.place_id + "'><a onclick=\"javascript:getMap('" + data.from_coords + "', '" + entry.place_id + "', '" + entry.coords + "')\">" + entry.address + "</a></td>";
 						table += "</tr>";
 					}
 
@@ -526,7 +542,7 @@
 				}
 			}
 
-			function getMap(place_id, coords) {
+			function getMap(from_coords, place_id, coords) {
 				
 				// close map if already open
 				var m = document.getElementById("map-" + place_id);
@@ -546,16 +562,92 @@
 				var place = {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])};
 
 				var map = new google.maps.Map(document.getElementById('map-' + place_id), {
-					zoom: 12,
+					zoom: 16,
 					center: place
 				});
 
+				// save map globally				
+				window.maps["map-" + place_id] = map;
 				var marker = new google.maps.Marker({
 					position: place,
 					map: map
 				});
+
+				// create directions
+				var t = document.createElement('template');	// to create element from string
+				var dir = "<div class='dir-options'>" + 
+					"<div onclick=walk('" + from_coords + "','" + place_id + "')>Walk there</div>" +
+					"<div onclick=bike('" + from_coords + "','" + place_id + "')>Bike there</div>" + 
+					"<div onclick=drive('" + from_coords + "','" + place_id + "')>Drive there</div>" + 
+				"</div>";
+
+				t.innerHTML = dir.trim();
+				d.appendChild(t.content);
+
 			}
 
+			function walk(from_coords, place_id) {
+				from_coords = from_coords.replace(" ", "").split(",");
+
+				var directionsRequestObject = {
+					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
+					destination: { placeId: place_id },
+					travelMode: "WALKING"
+				};
+
+				renderDirections(directionsRequestObject, place_id);
+			}
+
+			function bike(from_coords, place_id) {
+				from_coords = from_coords.replace(" ", "").split(",");
+
+				var directionsRequestObject = {
+					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
+					destination: { placeId: place_id },
+					travelMode: "BICYCLING"
+				};
+
+				renderDirections(directionsRequestObject, place_id);
+			}
+
+			function drive(from_coords, place_id) {
+				from_coords = from_coords.replace(" ", "").split(",");
+
+				var directionsRequestObject = {
+					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
+					destination: { placeId: place_id },
+					travelMode: "DRIVING"
+				};
+
+				renderDirections(directionsRequestObject, place_id);
+			}
+
+			function renderDirections(directionsRequestObject, place_id) {
+				var directionsService = new google.maps.DirectionsService();
+				
+				directionsService.route(directionsRequestObject, function(result, status) {
+					if (status == "OK") {
+						// check whether a DirectionRenderer for a particular map already exists
+						if (window.directionsRenderers["map-" + place_id]) {
+							window.directionsRenderers["map-" + place_id].set('directions', null);
+						}
+						// otherwise create a new one
+						else {
+							var directionsDisplay = new google.maps.DirectionsRenderer({
+								map: window.maps["map-" + place_id]
+							});
+
+							// save renderers so that we can clear previous directions instead of overlapping
+							window.directionsRenderers["map-" + place_id] = directionsDisplay;				
+						}						
+						
+						window.directionsRenderers["map-" + place_id].setDirections(result);
+					}
+				})
+
+			}
+			window.directionsRenderers = [];
+			window.maps = [];
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_osgzTFg21KVMoWaxZ3aKzBKbb7t_b4s" async defer></script>
 	</body>
