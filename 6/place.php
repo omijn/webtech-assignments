@@ -420,8 +420,8 @@
 
 				// reviews				
 				var wrapper1 = "<div id='review-wrapper' onclick='toggleReviews()'>";
-				wrapper1 += "<span>click to show reviews</span><br>";
-				wrapper1 += "<img src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
+				wrapper1 += "<span id='review-toggle-text'>click to show reviews</span><br>";
+				wrapper1 += "<img id='review-toggle-img' src='http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png'>";
 				wrapper1 += "</div>";
 
 				var table1 = "<table style='display:none' id='review-table'><tbody>";
@@ -454,6 +454,28 @@
 				document.getElementById("result-area").appendChild(template.content.firstChild);
 			}
 
+			function toggleReviews() {
+				var review_table = document.getElementById("review-table");
+
+				// show reviews
+				if (review_table.style.display == "none") {
+					review_table.style.display = "block";
+					document.getElementById("review-toggle-text").innerHTML = "click to hide reviews";
+					document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_up.png";
+				}
+
+				// hide reviews
+				else {
+					review_table.style.display = "none";
+					document.getElementById("review-toggle-text").innerHTML = "click to show reviews";
+					document.getElementById("review-toggle-img").src = "http://cs-server.usc.edu:45678/hw/hw6/images/arrow_down.png";
+				}
+			}
+
+			function togglePhotos() {
+
+			}
+			
 		</script>
 	</body>
 </html>
