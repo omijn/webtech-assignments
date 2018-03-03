@@ -1,6 +1,5 @@
 <?php 
 	
-
 	// call Google Geocoding API - convert address to coordinates
 	function get_coords_by_address($address) {
 		
@@ -43,6 +42,7 @@
 			$clean_response[$index]["name"] = $result["name"];
 			$clean_response[$index]["address"] = $result["vicinity"];
 			$clean_response[$index]["place_id"] = $result["place_id"];
+			$clean_response[$index]["coords"] = urldecode($location);
 		}		
 
 		return json_encode($clean_response);		
@@ -222,7 +222,11 @@
 				font-weight: bold;
 			}
 
-
+			.map {
+				position: absolute;
+				width: 400px;
+				height: 400px;
+			}
 		</style>
 	</head>
 
@@ -364,7 +368,7 @@
 						table += "<tr>";
 						table += "<td><img src='" + entry.category + "' alt='category-icon'></td>";
 						table += "<td><a onclick=\"javascript:getDetails('" + entry.place_id + "', '" + escape(entry.name) + "')\">" + entry.name + "</a></td>";
-						table += "<td><a onclick='javascript:getMap()'>" + entry.address +"</a></td>";
+						table += "<td id='address-" + entry.place_id + "'><a onclick=\"javascript:getMap('" + entry.place_id + "', '" + entry.coords + "')\">" + entry.address + "</a></td>";
 						table += "</tr>";
 					}
 
@@ -453,7 +457,6 @@
 					table1 += "</tbody></table>";							
 				}
 
-
 				// photos
 				var wrapper2 = "<div id='photo-wrapper' onclick='togglePhotos()'>";
 				wrapper2 += "<span id='photo-toggle-text'>click to show photos</span><br>";
@@ -523,7 +526,38 @@
 				}
 			}
 
+			function getMap(place_id, coords) {
+				
+				// close map if already open
+				var m = document.getElementById("map-" + place_id);
+				if (m) {
+					m.parentNode.removeChild(m);
+					return;			
+				}
+
+				// create map div
+				var d = document.createElement("div");
+				d.id = "map-" + place_id;
+				d.classList.add("map");
+				var reference_node = document.getElementById("address-" + place_id);
+				reference_node.insertBefore(d, reference_node.nextSibling);
+
+				coords = coords.replace(" ", "").split(",");
+				var place = {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])};
+
+				var map = new google.maps.Map(document.getElementById('map-' + place_id), {
+					zoom: 12,
+					center: place
+				});
+
+				var marker = new google.maps.Marker({
+					position: place,
+					map: map
+				});
+			}
+
 		</script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_osgzTFg21KVMoWaxZ3aKzBKbb7t_b4s" async defer></script>
 	</body>
 </html>
 
