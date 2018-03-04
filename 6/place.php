@@ -580,9 +580,9 @@
 				// create directions
 				var t = document.createElement('template');	// to create element from string
 				var dir = "<div class='dir-options'>" + 
-					"<div onclick=walk('" + from_coords + "','" + place_id + "')>Walk there</div>" +
-					"<div onclick=bike('" + from_coords + "','" + place_id + "')>Bike there</div>" + 
-					"<div onclick=drive('" + from_coords + "','" + place_id + "')>Drive there</div>" + 
+					"<div onclick=walk('" + from_coords + "','" + place_id + "','" + coords + "')>Walk there</div>" +
+					"<div onclick=bike('" + from_coords + "','" + place_id + "','" + coords + "')>Bike there</div>" + 
+					"<div onclick=drive('" + from_coords + "','" + place_id + "','" + coords + "')>Drive there</div>" + 
 				"</div>";
 
 				t.innerHTML = dir.trim();
@@ -590,36 +590,42 @@
 
 			}
 
-			function walk(from_coords, place_id) {
+			function walk(from_coords, place_id, to_coords) {
 				from_coords = from_coords.replace(" ", "").split(",");
+				to_coords = to_coords.replace(" ", "").split(",");
 
 				var directionsRequestObject = {
 					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
-					destination: { placeId: place_id },
+					destination: { lat: parseFloat(to_coords[0]), lng: parseFloat(to_coords[1])},
+					// destination: { placeId: place_id },
 					travelMode: "WALKING"
 				};
 
 				renderDirections(directionsRequestObject, place_id);
 			}
 
-			function bike(from_coords, place_id) {
+			function bike(from_coords, place_id, to_coords) {
 				from_coords = from_coords.replace(" ", "").split(",");
+				to_coords = to_coords.replace(" ", "").split(",");
 
 				var directionsRequestObject = {
 					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
-					destination: { placeId: place_id },
+					destination: { lat: parseFloat(to_coords[0]), lng: parseFloat(to_coords[1])},
+					// destination: { placeId: place_id },
 					travelMode: "BICYCLING"
 				};
 
 				renderDirections(directionsRequestObject, place_id);
 			}
 
-			function drive(from_coords, place_id) {
+			function drive(from_coords, place_id, to_coords) {
 				from_coords = from_coords.replace(" ", "").split(",");
+				to_coords = to_coords.replace(" ", "").split(",");
 
 				var directionsRequestObject = {
 					origin: { lat: parseFloat(from_coords[0]), lng: parseFloat(from_coords[1]) },
-					destination: { placeId: place_id },
+					destination: { lat: parseFloat(to_coords[0]), lng: parseFloat(to_coords[1])},
+					// destination: { placeId: place_id },
 					travelMode: "DRIVING"
 				};
 
