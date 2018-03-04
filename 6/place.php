@@ -378,7 +378,7 @@
 				var template = document.createElement("template");	// cool HTML5 stuff
 
 				// if nearby search returns results
-				if (data.results.length	!= 0) {
+				if ("results" in data) {
 					var table = "<table id='nearby-results-table'><thead><tr><th>Category</th><th>Name</th><th>Address</th></tr></thead><tbody>";
 					for (let entry of data.results) {
 						table += "<tr>";
@@ -406,11 +406,16 @@
 
 			/* clear result area 
 			 * NOTE - clear can't be used as a function name */
-			function clr() {				
+			function clr() {
 				var result_div = document.getElementById("result-area");
 				while(result_div.hasChildNodes()) {
 					result_div.removeChild(result_div.lastChild);
 				}
+
+				// also delete maps
+				window.maps = [];
+				window.directionsRenderers = [];
+				window.markers = [];
 			}
 
 			function setDefaults() {
@@ -564,7 +569,7 @@
 				var place = {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])};
 
 				var map = new google.maps.Map(document.getElementById('map-' + place_id), {
-					zoom: 16,
+					zoom: 14,
 					center: place
 				});
 
