@@ -548,6 +548,8 @@
 				var m = document.getElementById("map-" + place_id);
 				if (m) {
 					m.parentNode.removeChild(m);
+					window.maps["map-" + place_id] = null;
+					window.directionsRenderers["map-" + place_id] = null;
 					return;			
 				}
 
@@ -572,6 +574,8 @@
 					position: place,
 					map: map
 				});
+
+				window.markers["map-" + place_id] = marker;
 
 				// create directions
 				var t = document.createElement('template');	// to create element from string
@@ -628,11 +632,11 @@
 				directionsService.route(directionsRequestObject, function(result, status) {
 					if (status == "OK") {
 						// check whether a DirectionRenderer for a particular map already exists
-						if (window.directionsRenderers["map-" + place_id]) {
+						if (window.directionsRenderers["map-" + place_id]) {							
 							window.directionsRenderers["map-" + place_id].set('directions', null);
 						}
 						// otherwise create a new one
-						else {
+						else {							
 							var directionsDisplay = new google.maps.DirectionsRenderer({
 								map: window.maps["map-" + place_id]
 							});
@@ -641,11 +645,13 @@
 							window.directionsRenderers["map-" + place_id] = directionsDisplay;				
 						}						
 						
+						window.markers["map-" + place_id].setMap(null);
 						window.directionsRenderers["map-" + place_id].setDirections(result);
 					}
 				})
 
 			}
+			window.markers = [];
 			window.directionsRenderers = [];
 			window.maps = [];
 		</script>
