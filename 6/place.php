@@ -132,6 +132,7 @@
 				border: 3px solid #ccc;
 				padding: 5px;
 				background-color: #f7f7f7;
+				position: relative;
 			}
 			
 			#search-box h1 {
@@ -147,6 +148,14 @@
 
 			#search-box #location-radio {
 				display: inline-block;				
+			}
+
+			#load-text {
+				position: absolute;
+				padding: 15px;
+				color: blue;
+				right: 0;
+				bottom: 0;
 			}
 
 			table {
@@ -288,6 +297,7 @@
 				<input type="submit" value="Search" id="search-button" disabled> 
 				<input type="button" value="Clear" onclick="clr(); setDefaults();">
 			</form>
+			<div id="load-text"></div>
 		</div>
 		
 		<div id="result-area"></div>
@@ -304,7 +314,7 @@
 						throw xhr.status;
 				}
 				catch(error_status) {
-					console.log("Fetching geolocation failed with HTTP status code " + error_status);
+					alert("Fetching geolocation failed with HTTP status code " + error_status);
 					return;
 				}
 
@@ -354,10 +364,12 @@
 
 			function submitForm(keyword, category, distance, location_type, loc) {
 				var xhr = new XMLHttpRequest();
+				document.getElementById("load-text").innerHTML = "Loading...";
 				xhr.open("POST", "place.php", true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function() {					
-					if (xhr.readyState == 4 && xhr.status == 200) {						
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						document.getElementById("load-text").innerHTML = "";
 						nearby_data = JSON.parse(xhr.responseText);						
 						displayNearbyData(nearby_data);
 					}
@@ -368,7 +380,8 @@
 						"&category=" + category + 
 						"&distance=" + distance + 
 						"&location_type=" + location_type + 
-						"&loc=" + loc);		
+						"&loc=" + loc);
+
 			}
 
 			function displayNearbyData(data) {							
@@ -432,11 +445,12 @@
 
 			function getDetails(place_id, place_name) {
 				var xhr = new XMLHttpRequest();
+				document.getElementById("load-text").innerHTML = "Loading...";
 				xhr.open("POST", "place.php", true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4 && xhr.status == 200) {
-						console.log(xhr.responseText);
+						document.getElementById("load-text").innerHTML = "";						
 						detailed_data = JSON.parse(xhr.responseText);
 						displayDetailedData(detailed_data, place_name);
 					}
