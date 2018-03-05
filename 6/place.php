@@ -10,6 +10,9 @@
 		$request_url = $api_baseurl."address=$address"."&key=$api_key";
 
 		$response = json_decode(file_get_contents($request_url), true);
+		if(empty($response["results"])) {
+			exit(json_encode(array()));
+		}
 
 		$latitude = $response["results"][0]["geometry"]["location"]["lat"];
 		$longitude = $response["results"][0]["geometry"]["location"]["lng"];
