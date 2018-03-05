@@ -1,5 +1,6 @@
 <?php 
 	
+
 	// call Google Geocoding API - convert address to coordinates
 	function get_coords_by_address($address) {
 		
@@ -61,27 +62,31 @@
 		
 		// exit(json_encode($response));
 
-		$clean_response = array("photos" => array(), "reviews" => array());		
-		foreach ($response["result"]["photos"] as $key => $photo_obj) {
-			if ($key > 4)	// save only upto 5 photos
-				break;
-			$ref = $photo_obj["photo_reference"];
-			$width = $photo_obj["width"];
-			$photo = photo_search($ref, $width);
-			$filename = "$place_id"."_"."img".$key;
-			file_put_contents($filename, $photo);
+		$clean_response = array("photos" => array(), "reviews" => array());	
+		if(array_key_exists("photos", $response["result"])) {
+			foreach ($response["result"]["photos"] as $key => $photo_obj) {
+				if ($key > 4)	// save only upto 5 photos
+					break;
+				$ref = $photo_obj["photo_reference"];
+				$width = $photo_obj["width"];
+				$photo = photo_search($ref, $width);
+				$filename = "$place_id"."_"."img".$key;
+				file_put_contents($filename, $photo);
 
-			$clean_response["photos"][$key] = $filename;
+				$clean_response["photos"][$key] = $filename;
+			}			
 		}
 
-		foreach ($response["result"]["reviews"] as $key => $review_obj) {
-			if ($key > 4)	// save only upto 5 reviews
-				break;
-			$author_name = $review_obj["author_name"];
-			$author_photo = $review_obj["profile_photo_url"];
-			$review = $review_obj["text"];
+		if(array_key_exists("reviews", $response["result"])) {
+			foreach ($response["result"]["reviews"] as $key => $review_obj) {
+				if ($key > 4)	// save only upto 5 reviews
+					break;
+				$author_name = $review_obj["author_name"];
+				$author_photo = $review_obj["profile_photo_url"];
+				$review = $review_obj["text"];
 
-			$clean_response["reviews"][$key] = array("author_name" => $author_name, "author_photo" => $author_photo, "review" => $review);
+				$clean_response["reviews"][$key] = array("author_name" => $author_name, "author_photo" => $author_photo, "review" => $review);
+			}			
 		}
 
 		return json_encode($clean_response);
@@ -454,6 +459,7 @@
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState == 4 && xhr.status == 200) {
 						document.getElementById("load-text").innerHTML = "";						
+						console.log(xhr.responseText);
 						detailed_data = JSON.parse(xhr.responseText);
 						displayDetailedData(detailed_data, place_name);
 					}
