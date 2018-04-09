@@ -18,12 +18,13 @@
 <body>
 	<div class="container">
 		<div id="search-box" class="jumbotron mt-4 p-3">
-			<form action="">
+			<form action="" novalidate>
 				<h4 class="mb-4 text-center">Travel and Entertainment Search</h4>
 				<div class="form-group row">
-					<label for="input-keyword" class="col-sm-2 offset-sm-2 col-form-label">Keyword</label>
+					<label for="input-keyword" class="col-sm-2 offset-sm-2 col-form-label req">Keyword</label>
 					<div class="col-sm-6">
 						<input type="text" class="form-control" id="input-keyword" autofocus>
+						<div class="error d-none">Please enter a keyword</div>
 					</div>
 				</div>
 
@@ -37,7 +38,6 @@
 							<option value="aquarium">Aquarium</option>
 							<option value="art_gallery">Art Gallery</option>
 							<option value="bakery">Bakery</option>
-
 							<option value="bar">Bar</option>
 							<option value="beauty_salon">Beauty Salon</option>
 							<option value="bowling_alley">Bowling Alley</option>
@@ -73,20 +73,21 @@
 				
 				<div class="form-group">
 					<div class="row">
-						<label class="col-sm-2 offset-sm-2 col-form-label">From</label>
+						<label class="col-sm-2 offset-sm-2 col-form-label req">From</label>
 						<div class="col-sm-6">
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="location" id="gridRadios1" value="here" checked>
-								<label class="form-check-label" for="gridRadios1">
+								<input class="form-check-input" type="radio" name="location" id="radio-here" value="here" checked>
+								<label class="form-check-label" for="radio-here">
 									Current location
 								</label>
 							</div>							
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="location" id="gridRadios3" value="there">
-								<label class="form-check-label" for="gridRadios3">
+								<input class="form-check-input" type="radio" name="location" id="radio-there" value="there">
+								<label class="form-check-label" for="radio-there">
 									Other, please specify
 								</label>
 								<br><input type="text" class="form-control" id="input-location" placeholder="Enter a location" disabled>
+								<div class="error d-none">Please enter a location</div>
 							</div>
 						</div>
 					</div>
@@ -97,7 +98,7 @@
 
 				<div class="form-group row">
 					<div class="col-sm-4 offset-sm-2">
-						<button type="button" class="btn btn-primary" id="search-button" disabled><i class="fas fa-search"></i> Search</button>
+						<button type="button" class="btn btn-secondary" id="search-button" disabled><i class="fas fa-search"></i> Search</button>
 						<button type="button" class="btn btn-light">Reset</button>
 					</div>
 				</div>
