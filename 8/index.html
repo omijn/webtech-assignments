@@ -1,0 +1,95 @@
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title>HW8 - Place Search</title>
+
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+	<div class="container">
+		<div id="search-box" class="jumbotron mt-4 p-3">
+			<form action="">
+				<h4 class="mb-4 text-center">Travel and Entertainment Search</h4>
+				<div class="form-group row">
+					<label for="input-keyword" class="col-sm-2 offset-sm-2 col-form-label">Keyword</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" id="input-keyword" autofocus>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="input-category" class="col-sm-2 offset-sm-2 col-form-label">Category</label>
+					<div class="col-sm-4">
+						<select class="form-control" id="input-category">
+							<option value="default">Default</option>
+							<option value="cafe">Cafe</option>
+							<option value="bakery">Bakery</option>
+							<option value="restaurant">Restaurant</option>
+							<option value="beauty_salon">Beauty Salon</option>
+							<option value="casino">Casino</option>
+							<option value="movie_theater">Movie Theater</option>
+							<option value="lodging">Lodging</option>
+							<option value="airport">Airport</option>
+							<option value="train_station">Train Station</option>
+							<option value="subway_station">Subway Station</option>
+							<option value="bus_station">Bus Station</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group row">
+					<label for="input-distance" class="col-sm-2 offset-sm-2 col-form-label">Distance</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="input-distance">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="row">
+						<label class="col-sm-2 offset-sm-2 col-form-label">From</label>
+						<div class="col-sm-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="location" id="gridRadios1" value="here" checked>
+								<label class="form-check-label" for="gridRadios1">
+									Current location
+								</label>
+							</div>							
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="location" id="gridRadios3" value="there">
+								<label class="form-check-label" for="gridRadios3">
+									Other, please specify
+								</label>
+								<br><input type="text" class="form-control" id="input-location" placeholder="Enter a location" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-sm-4 offset-sm-2">
+						<button type="button" class="btn btn-info">Search</button>
+						<button type="button" class="btn btn-light">Reset</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "csci571_hw8",
+  "version": "1.0.0",
+  "description": "CSCI 571 (Web Technologies) @USC Spring 2018, Homework 8",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abhijit Kashyap",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
