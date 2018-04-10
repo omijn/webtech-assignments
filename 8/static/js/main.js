@@ -66,3 +66,6 @@ $(document).ready(() => {
 		}		
 	})
 })
+
+// autocomplete
+autocomplete = new google.maps.places.Autocomplete($("#input-keyword")[0])
