@@ -1,5 +1,6 @@
 function enableSearchBtn() {
-	$("#search-button").removeAttr("disabled").removeClass("btn-secondary").addClass("btn-primary")
+	if(localStorage.user_latitude)
+		$("#search-button").removeAttr("disabled").removeClass("btn-secondary").addClass("btn-primary")
 }
 
 function disableSearchBtn() {
@@ -58,7 +59,7 @@ $(document).ready(() => {
 		success: (data, status, xhr) => {			
 			console.log(data.lat + ", " + data.lon)
 			localStorage.user_latitude = data.lat
-			localStorage.user_longitude = data.lon
+			localStorage.user_longitude = data.lon			
 		},
 		error: (xhr, status, errorMsg) => {
 			console.log("Failed to get user location: " + errorMsg)
@@ -77,7 +78,7 @@ function nearby_search(params) {
 		contentType: 'application/json',
 		data: JSON.stringify(params),
 		success: (data, status, xhr) => {
-			console.log(data)
+			displayNearbyResults(JSON.parse(data))
 		},
 		error: (xhr, status, errorMsg) => {
 			console.log(errorMsg)
@@ -109,3 +110,36 @@ $("#search-button").click(() => {
 
 	nearby_search(params)
 })
+
+function displayNearbyResults(data) {
+	// clr()
+
+	if (data.results != []) {
+		var html = "<table class=\"table\"> \
+			<thead> \
+				<th scope=\"col\">#</th> \
+				<th scope=\"col\">Category</th> \
+				<th scope=\"col\">Name</th> \
+				<th scope=\"col\">Address</th> \
+				<th scope=\"col\">Favorite</th> \
+				<th scope=\"col\">Details</th> \
+			</thead> \
+			<tbody>"
+
+		for (var i = 0; i < data.results.length; i++) {
+			var index = i + 1
+			html += "<tr>" +
+				 "<td>" + index + "</td>" +
+				 "<td><img width=30 src='" + data.results[i].icon + "' alt='category-icon'></td>" +
+				 "<td>" + data.results[i].name + "</td>" +
+				 "<td>" + data.results[i].address + "</td>" +
+				 "<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "')\">B1</button></td>" +
+				 "<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "')\">B2</button></td>" +
+				 "</tr>"					
+		}
+
+		html += "</tbody></table>"
+
+		$("#results-area").append(html)
+	}
+}

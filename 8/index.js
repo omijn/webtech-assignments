@@ -60,6 +60,7 @@ app.post('/nearby', jsonParser, (req, res, next) => {
 				single_result = {}
 				single_result.place_id = r.place_id
 				single_result.icon = r.icon
+				single_result.name = r.name
 				single_result.address = r.vicinity
 				single_result.coords = r.geometry.location.lat + "," + r.geometry.location.lng
 				nearby_response.results.push(single_result)
