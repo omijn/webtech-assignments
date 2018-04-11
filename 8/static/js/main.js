@@ -133,9 +133,9 @@ function displayNearbyResults(data) {
 				 "<td><img width=30 src='" + data.results[i].icon + "' alt='category-icon'></td>" +
 				 "<td>" + data.results[i].name + "</td>" +
 				 "<td>" + data.results[i].address + "</td>" +
-				 "<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "')\">B1</button></td>" +
+				 "<td><button class='btn btn-light' onclick=\"javascript:fav('" + data.results[i].place_id + "')\">B1</button></td>" +
 				 "<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "')\">B2</button></td>" +
-				 "</tr>"					
+				 "</tr>"
 		}
 
 		html += "</tbody></table>"

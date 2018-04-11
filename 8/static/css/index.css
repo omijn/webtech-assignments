@@ -10,3 +10,12 @@ label.req::after {
 .error {
 	color: red;
 }
+
+.btn-tgl {
+	color: blue;
+}
+
+.btn-active {
+	background: blue;
+	color: #fff;
+}
