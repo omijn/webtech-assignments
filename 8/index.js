@@ -64,8 +64,7 @@ app.post('/nearby', jsonParser, (req, res, next) => {
 				single_result.address = r.vicinity
 				single_result.coords = r.geometry.location.lat + "," + r.geometry.location.lng
 				nearby_response.results.push(single_result)
-			}
-			console.log(nearby_response)
+			}			
 			res.send(JSON.stringify(nearby_response))
 		}
 		else

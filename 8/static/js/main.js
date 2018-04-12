@@ -112,34 +112,99 @@ $("#search-button").click(() => {
 })
 
 function displayNearbyResults(data) {
-	// clr()
+	clr()
 
 	if (data.results != []) {
 		var html = "<table class=\"table\"> \
-			<thead> \
-				<th scope=\"col\">#</th> \
-				<th scope=\"col\">Category</th> \
-				<th scope=\"col\">Name</th> \
-				<th scope=\"col\">Address</th> \
-				<th scope=\"col\">Favorite</th> \
-				<th scope=\"col\">Details</th> \
-			</thead> \
-			<tbody>"
+		<thead> \
+		<th scope=\"col\">#</th> \
+		<th scope=\"col\">Category</th> \
+		<th scope=\"col\">Name</th> \
+		<th scope=\"col\">Address</th> \
+		<th scope=\"col\">Favorite</th> \
+		<th scope=\"col\">Details</th> \
+		</thead> \
+		<tbody>"
 
 		for (var i = 0; i < data.results.length; i++) {
 			var index = i + 1
 			html += "<tr>" +
-				 "<td>" + index + "</td>" +
-				 "<td><img width=30 src='" + data.results[i].icon + "' alt='category-icon'></td>" +
-				 "<td>" + data.results[i].name + "</td>" +
-				 "<td>" + data.results[i].address + "</td>" +
-				 "<td><button class='btn btn-light' onclick=\"javascript:fav('" + data.results[i].place_id + "')\">B1</button></td>" +
-				 "<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "')\">B2</button></td>" +
-				 "</tr>"
+			"<td>" + index + "</td>" +
+			"<td><img width=30 src='" + data.results[i].icon + "' alt='category-icon'></td>" +
+			"<td>" + data.results[i].name + "</td>" +
+			"<td>" + data.results[i].address + "</td>" +
+			"<td><button class='btn btn-light' onclick=\"javascript:fav('" + data.results[i].place_id + "')\"><i class=\"far fa-star\"></i></button></td>" +
+			"<td><button class='btn btn-light' onclick=\"javascript:getDetails('" + data.results[i].place_id + "', 'results')\"><i class=\"fas fa-chevron-right\"></i></button></td>" +
+			"</tr>"
 		}
 
 		html += "</tbody></table>"
 
-		$("#results-area").append(html)
+		$("#pills-results-content").append(html)
 	}
+}
+
+function getDetails(place_id, fromTable) {	
+
+	var request = {
+		placeId: place_id
+	}
+
+	var map = $("#map")[0]	
+	
+	service = new google.maps.places.PlacesService(map);
+	service.getDetails(request, (place, status) => {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {	
+			// populate map
+			var map = new google.maps.Map($("#map")[0], {
+				center: place.geometry.location,
+				zoom: 16
+			});
+
+			var marker = new google.maps.Marker({
+				map: map,
+				position: place.geometry.location
+			})			
+
+			$("#input-directions-to").val(place.formatted_address)
+
+			// populate info
+			$("#info-content").html(place.formatted_address + "<br>" + place.international_phone_number + "<br>" + place.price_level + "<br>" + place.rating + "<br>" + place.url + "<br>" + place.website + "<br>" + place.opening_hours.open_now)
+
+			// populate photos
+			for (var i = 0; i < place.photos.length; i++) {
+				var url = place.photos[i].getUrl({'maxWidth': 200});
+				$(".gallery-column:eq(" + parseInt(i)%4 + ")").append("<img src=\"" + url + "\">")
+			}
+
+			// populate reviews
+
+			// hide old table
+			$("#pills-" + fromTable + "-content").addClass("d-none")
+
+			// show details area (info, photos, map, reviews)
+			$("#details-area").removeClass("d-none")
+		}
+	});	
+}
+
+$("#clear-button").click(() => {
+	clr()
+	setDefaults()
+})
+
+function clr() {
+	$("#pills-results-content").empty()
+}
+
+function setDefaults() {
+	$("#input-keyword").val("");
+	$("#input-keyword").focus();
+
+	$("#input-category").val("default");
+	$("#input-distance").val("");
+	$("input[name='location']")[0].checked = true;
+
+	$("#input-location").val("");
+	$("#input-location").attr("disabled", "disabled");
 }

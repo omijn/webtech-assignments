@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -99,17 +100,91 @@
 				<div class="form-group row">
 					<div class="col-sm-4 offset-sm-2">
 						<button type="button" class="btn btn-secondary" id="search-button" disabled><i class="fas fa-search"></i> Search</button>
-						<button type="button" class="btn btn-light">Reset</button>
+						<button type="button" class="btn btn-light" id="clear-button">Reset</button>
 					</div>
 				</div>
 			</form>
 		</div>
 		
-		<div style="text-align: center;">
+		<!-- <div style="text-align: center;">
 			<button class="btn btn-light btn-tgl btn-active text-center">Results</button>
 			<button class="btn btn-light btn-tgl">Favorites</button>			
+		</div> -->
+		<div class="d-flex justify-content-center">
+			<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="pills-results-content-tab" data-toggle="pill" href="#pills-results-content" role="tab" aria-controls="pills-results-content" aria-selected="true">Results</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-favorites-content-tab" data-toggle="pill" href="#pills-favorites-content" role="tab" aria-controls="pills-favorites-content" aria-selected="false">Favorites</a>
+				</li>		
+			</ul>
 		</div>
-		<div id="results-area"></div>		
+
+		<div class="tab-content" id="pills-tabContent">
+			<!-- results -->
+			<div class="tab-pane fade show active" id="pills-results-content" role="tabpanel" aria-labelledby="pills-results-content-tab">
+				
+			</div>
+			
+			<!-- favorites -->
+			<div class="tab-pane fade" id="pills-favorites-content" role="tabpanel" aria-labelledby="pills-favorites-content-tab">
+				
+			</div>
+
+			<div id="details-area" class="d-none">
+				<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+					<li class="nav-item ml-auto">
+						<a class="nav-link active" id="info-content-tab" data-toggle="tab" href="#info-content" role="tab" aria-controls="info-content" aria-selected="true">Info</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="photos-content-tab" data-toggle="tab" href="#photos-content" role="tab" aria-controls="photos-content" aria-selected="false">Photos</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="map-content-tab" data-toggle="tab" href="#map-content" role="tab" aria-controls="map-content" aria-selected="false">Map</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="reviews-content-tab" data-toggle="tab" href="#reviews-content" role="tab" aria-controls="reviews-content" aria-selected="false">Reviews</a>
+					</li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade show active" id="info-content" role="tabpanel" aria-labelledby="info-content-tab"></div>
+					<div class="tab-pane fade" id="photos-content" role="tabpanel" aria-labelledby="photos-content-tab">
+						<div class="gallery-row d-flex">
+							<div class="gallery-column"></div>
+							<div class="gallery-column"></div>
+							<div class="gallery-column"></div>
+							<div class="gallery-column"></div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="map-content" role="tabpanel" aria-labelledby="map-content-tab">
+						<form class="form-inline mb-3">
+							<label class="sr-only" for="input-directions-from">From</label>
+							<input type="text" class="form-control mr-2" id="input-directions-from" placeholder="Your location">
+
+							<label class="sr-only" for="input-directions-to">To</label>							
+							<input type="text" class="form-control mr-2" id="input-directions-to" disabled>
+
+							<label class="sr-only" for="input-driving-mode">Travel Mode</label>							
+							<select class="form-control mr-2" id="input-driving-mode">
+								<option value="d">Driving</option>
+								<option value="b">Bicycling</option>
+								<option value="t">Transit</option>
+								<option value="w">Walking</option>								
+							</select>
+
+							<button type="button" class="btn btn-info ml-auto">Get Directions</button>
+						</form>
+
+						<div id="map" class="mb-5">
+							
+						</div>
+					</div>
+					<div class="tab-pane fade" id="reviews-content" role="tabpanel" aria-labelledby="reviews-content-tab"></div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 
@@ -119,6 +194,8 @@
 	
 	<!-- places service: autocomplete -->
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1lLYLgXAV3QT8diQ-J2P5Av0KyErEag8&libraries=places"></script>
+
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1lLYLgXAV3QT8diQ-J2P5Av0KyErEag8" async defer></script> -->
 
 	<script src="js/main.js"></script>
 </body>
