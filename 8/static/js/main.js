@@ -117,7 +117,7 @@ $("#search-button").click(() => {
 function displayNearbyResults(data) {
 	clr()
 
-	if (data.results != []) {
+	if (data.results.length != 0) {
 		var html = "<table class=\"table\"> \
 		<thead> \
 		<th scope=\"col\">#</th> \
@@ -145,6 +145,13 @@ function displayNearbyResults(data) {
 
 		$("#pills-results-content").append(html)
 	}
+	else {
+		var html = `<div class="alert alert-warning" role="alert">
+		No results
+		</div>`
+
+		$("#pills-results-content").append(html)	
+	}
 }
 
 function getDetails(place_id, fromTable) {	
@@ -169,8 +176,7 @@ function getDetails(place_id, fromTable) {
 				position: place.geometry.location
 			})			
 
-			$("#input-directions-to").val(place.formatted_address)
-
+			$("#input-directions-to").val(place.name + ", " + place.formatted_address)
 			localStorage.to_coordinates = place.geometry.location
 
 			// display stuff above tabs - place name and buttons
@@ -227,6 +233,9 @@ function getDetails(place_id, fromTable) {
 					$(".gallery-column:eq(" + parseInt(i)%4 + ")").append("<a target='_blank' href=\"" + full_url + "\"><img src=\"" + small_url + "\"></a>")
 				}				
 			}
+			else {
+				$("#photos-content").append(`<div class="alert alert-warning" role="alert">No results</div>`)				
+			}						
 
 			// populate reviews
 			reviews_html = "<div id=\"review-container\">"
@@ -250,6 +259,9 @@ function getDetails(place_id, fromTable) {
 
 					reviews_html += card
 				}
+			}
+			else {
+				reviews_html += `<div class="alert alert-warning" role="alert">No results</div>`
 			}
 
 			reviews_html += "</div>"
@@ -288,6 +300,7 @@ function clr() {
 	$("#review-container").remove()
 	$("#tweet-button").off("click")
 	$("#button-row").addClass("d-none")
+	$(".alert").remove()
 }
 
 function setDefaults() {
