@@ -71,22 +71,25 @@ $(document).ready(() => {
 autocomplete = new google.maps.places.Autocomplete($("#input-location")[0])
 
 // nearby search
-function nearby_search(params) {
+function nearby_search(params) {	
 	$.ajax({
 		url: '/nearby',
-		method: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(params),
+		method: 'GET',		
+		data: params,
 		success: (data, status, xhr) => {
 			displayNearbyResults(JSON.parse(data))
 		},
 		error: (xhr, status, errorMsg) => {
 			console.log(errorMsg)
+		},
+		complete: () => {
+			$(".progress").addClass("d-none")
 		}
 	})
 }
 
 $("#search-button").click(() => {
+	$(".progress").removeClass("d-none")
 	if ($("#radio-here").is(":checked")) {
 		var location_type = "coords"
 		var loc = localStorage.user_latitude + "," + localStorage.user_longitude
@@ -168,16 +171,90 @@ function getDetails(place_id, fromTable) {
 
 			$("#input-directions-to").val(place.formatted_address)
 
+			localStorage.to_coordinates = place.geometry.location
+
+			// display stuff above tabs - place name and buttons
+			$("#place-name").text(place.name)
+			$("#button-row").removeClass("d-none")
+
+			$("#tweet-button").off("click")
+			$("#tweet-button").on("click", () => {
+				var text = "Check out " + place.name + " located at " + place.formatted_address + ". Website: " + place.website
+				var hashtags = "TravelAndEntertainmentSearch"
+				window.open("https://twitter.com/intent/tweet?text=" + text + "&hashtags=" + hashtags, "_blank")
+			})			
+
+			$("#back-button").off("click")
+			$("#back-button").on("click", () => {				
+				$("#place-name").text("")
+				$("#details-area").addClass("d-none")
+				$("#info-content").empty()
+				$(".gallery-column").empty()
+				$("#review-container").remove()
+				$("#tweet-button").off("click")
+				$("#button-row").addClass("d-none")
+
+				// show old table
+				$("#pills-" + fromTable + "-content").removeClass("d-none")
+			})
+
 			// populate info
-			$("#info-content").html(place.formatted_address + "<br>" + place.international_phone_number + "<br>" + place.price_level + "<br>" + place.rating + "<br>" + place.url + "<br>" + place.website + "<br>" + place.opening_hours.open_now)
+			var info_table = "<table class=\"table table-striped\"><tbody>"
+			if (place.formatted_address)
+				info_table += "<tr><th>Address</th><td>" + place.formatted_address + "</td>"
+			if (place.international_phone_number)
+				info_table += "<tr><th>Phone Number</th><td>" + place.international_phone_number + "</td>"
+			if (place.price_level)
+				info_table += "<tr><th>Price Level</th><td>" + "$".repeat(place.price_level) + "</td>"
+			if (place.rating)
+				info_table += "<tr><th>Rating</th><td>" + place.rating + "</td>"
+			if (place.url)
+				info_table += "<tr><th>Google Page</th><td><a target='_blank' href=\"" + place.url + "\">" + place.url + "</a></td>"
+			if (place.website)
+				info_table += "<tr><th>Website</th><td><a target='_blank' href=\"" + place.website + "\">" + place.website + "</a></td>"
+			if (place.opening_hours)
+				info_table += "<tr><th>Hours</th><td>" + ((place.opening_hours.open_now)?"Open Now: <a>Today's Hours</a>":"Closed") + "</td>"
+
+			info_table += "</tbody></table>"
+
+			$("#info-content").html(info_table)
 
 			// populate photos
-			for (var i = 0; i < place.photos.length; i++) {
-				var url = place.photos[i].getUrl({'maxWidth': 200});
-				$(".gallery-column:eq(" + parseInt(i)%4 + ")").append("<img src=\"" + url + "\">")
+			if (place.photos) {
+				for (let i = 0; i < place.photos.length; i++) {
+					var small_url = place.photos[i].getUrl({'maxWidth': 200});
+					var full_url = place.photos[i].getUrl({'maxWidth': 2000});
+					$(".gallery-column:eq(" + parseInt(i)%4 + ")").append("<a target='_blank' href=\"" + full_url + "\"><img src=\"" + small_url + "\"></a>")
+				}				
 			}
 
 			// populate reviews
+			reviews_html = "<div id=\"review-container\">"
+			if(place.reviews) {			
+				for (let r of place.reviews) {				
+					var card = "\
+					<div class=\"card mb-2\"> \
+					<div class=\"card-body\">\
+					<div class=\"row\">\
+					<div class=\"col-md-2\">\
+					<img width=50 src=\"" + r.profile_photo_url + "\" />\
+					</div>\
+					<div class=\"col-md-10\">\
+					<h5 class=\"card-title\"><a target='_blank' href=\"" + r.author_url + "\">" + r.author_name + "</a></h5> \
+					<h6 class=\"card-subtitle mb-2 text-muted\">" + getTimeString(new Date(parseInt(r.time) * 1000)) + "</h6> \
+					<p class=\"card-text\">" + r.text + "</p> \
+					</div>\
+					</div>\
+					</div>\
+					</div>"
+
+					reviews_html += card
+				}
+			}
+
+			reviews_html += "</div>"
+
+			$("#reviews-content").append(reviews_html)
 
 			// hide old table
 			$("#pills-" + fromTable + "-content").addClass("d-none")
@@ -188,6 +265,14 @@ function getDetails(place_id, fromTable) {
 	});	
 }
 
+function pzero(num) {
+	return (num < 10)?'0' + num: num
+}
+
+function getTimeString(d) {
+	return d.getUTCFullYear() + "-" + pzero(d.getUTCMonth()) + "-" + pzero(d.getUTCDate()) + " " + pzero(d.getUTCHours()) + ":" + pzero(d.getUTCMinutes()) + ":" + pzero(d.getUTCSeconds())
+}
+
 $("#clear-button").click(() => {
 	clr()
 	setDefaults()
@@ -195,6 +280,14 @@ $("#clear-button").click(() => {
 
 function clr() {
 	$("#pills-results-content").empty()
+	$("#pills-results-content").removeClass("d-none")
+	$("#place-name").text("")
+	$("#details-area").addClass("d-none")
+	$("#info-content").empty()
+	$(".gallery-column").empty()
+	$("#review-container").remove()
+	$("#tweet-button").off("click")
+	$("#button-row").addClass("d-none")
 }
 
 function setDefaults() {

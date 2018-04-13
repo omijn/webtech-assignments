@@ -16,13 +16,13 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname + '/index.html'))
 })
 
-app.post('/nearby', jsonParser, (req, res, next) => {
-	
-	res.locals.keyword = req.body.keyword
-	res.locals.category = req.body.category
-	res.locals.distance = req.body.distance * 1609.34
-	var location_type = req.body.location_type
-	res.locals.loc = req.body.loc
+app.get('/nearby', (req, res, next) => {	
+
+	res.locals.keyword = req.query.keyword
+	res.locals.category = req.query.category
+	res.locals.distance = req.query.distance * 1609.34
+	var location_type = req.query.location_type
+	res.locals.loc = req.query.loc
 
 	if (location_type == "address") {
 		googleMapsClient.geocode({

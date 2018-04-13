@@ -120,7 +120,9 @@
 				</li>		
 			</ul>
 		</div>
-
+		<div class="progress d-none">
+			<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+		</div>
 		<div class="tab-content" id="pills-tabContent">
 			<!-- results -->
 			<div class="tab-pane fade show active" id="pills-results-content" role="tabpanel" aria-labelledby="pills-results-content-tab">
@@ -133,6 +135,12 @@
 			</div>
 
 			<div id="details-area" class="d-none">
+				<h3 id="place-name" class="text-center"></h3>
+				<div id="button-row" class="row my-2 d-none">
+					<button id="back-button" class="btn btn-light"><i class="fas fa-chevron-left"></i> List</button>
+					<button class="btn btn-light ml-auto"><i class="far fa-star"></i></button>
+					<button id="tweet-button" class="btn ml-2" style="background: #00aced; color: #fff"><i class="fab fa-twitter"></i></button>
+				</div>
 				<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
 					<li class="nav-item ml-auto">
 						<a class="nav-link active" id="info-content-tab" data-toggle="tab" href="#info-content" role="tab" aria-controls="info-content" aria-selected="true">Info</a>
@@ -180,7 +188,21 @@
 							
 						</div>
 					</div>
-					<div class="tab-pane fade" id="reviews-content" role="tabpanel" aria-labelledby="reviews-content-tab"></div>
+					<div class="tab-pane fade" id="reviews-content" role="tabpanel" aria-labelledby="reviews-content-tab">
+						<form class="form-inline mb-3">
+							<select id="input-review-service" class="form-control text-white bg-secondary mr-2">
+								<option value="google">Google Reviews</option>
+								<option value="yelp">Yelp Reviews</option>
+							</select>
+							<select id="input-review-sort" class="form-control text-white bg-secondary">
+								<option value="default">Default Order</option>
+								<option value="">Highest Rating</option>
+								<option value="">Lowest Rating</option>
+								<option value="">Most Recent</option>
+								<option value="">Least Recent</option>
+							</select>
+						</form>	
+					</div>
 				</div>
 			</div>
 		</div>
