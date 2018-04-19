@@ -11,7 +11,7 @@ const app = express()
 var jsonParser = bodyParser.json()
 
 app.use(express.static('static'))
-
+app.set('port', process.env.PORT || 8081)
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname + '/index.html'))
 })
@@ -72,4 +72,4 @@ app.get('/nearby', (req, res, next) => {
 	})
 })
 
-app.listen(2999, () => console.log('App listening on port 2999'))
+app.listen(app.get('port'), () => console.log('App listening.'))
