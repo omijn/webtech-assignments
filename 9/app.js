@@ -71,8 +71,7 @@ app.get('/details', (req, res) => {
 		// params
 		placeid: req.query.place_id
 	}, (err, response) => {
-		if (!err) {
-			console.log(response)
+		if (!err) {			
 			res.send(response)
 		}
 	})
